@@ -4,9 +4,8 @@ metadata:
   name: markets
   namespace: lux-gateway
   annotations:
-    kubernetes.io/ingress.class: ingress
+    kubernetes.io/ingress.class: "hanzo"
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   tls:
     - hosts:
