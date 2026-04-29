@@ -248,7 +248,9 @@ func (pc *PriceCache) fetchFromCoinGecko(ctx context.Context, tokenID, currency 
 		return nil, err
 	}
 
-	req.Header.Set("x-cg-demo-api-key", pc.apiKey)
+	if pc.apiKey != "" {
+		req.Header.Set("x-cg-demo-api-key", pc.apiKey)
+	}
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := pc.client.Do(req)
@@ -285,7 +287,9 @@ func (pc *PriceCache) fetchMultipleFromCoinGecko(ctx context.Context, tokenIDs [
 		return nil, err
 	}
 
-	req.Header.Set("x-cg-demo-api-key", pc.apiKey)
+	if pc.apiKey != "" {
+		req.Header.Set("x-cg-demo-api-key", pc.apiKey)
+	}
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := pc.client.Do(req)
@@ -434,10 +438,11 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	// Get API key from environment (required)
+	// CoinGecko API key — optional. When unset we fall back to the public
+	// demo CoinGecko endpoint with rate limits, suitable for dev/staging.
 	apiKey := os.Getenv("COINGECKO_API_KEY")
 	if apiKey == "" {
-		log.Fatal("COINGECKO_API_KEY environment variable is required")
+		log.Println("COINGECKO_API_KEY unset — using demo CoinGecko endpoint with public rate limits")
 	}
 
 	// Get port from environment or use default
